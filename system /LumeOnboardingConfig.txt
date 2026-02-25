@@ -1,0 +1,114 @@
+#initial config
+
+#############wifi############
+/etc/network/interfaces
+iface wlan0 inet dhcp
+        wpa-ssid "ssid"
+        wpa-psk "password"
+
+#############better term font############
+sudo dpkg-reconfigure console-setup
+Select “UTF-8”, “Guess optimal character set”, “Terminus” and “6x12 (framebuffer only).”
+
+#############raspi-config############
+expand FS, hostname, spi, i2c
+
+#############user admin############
+adduser maos
+passwd
+
+
+##############directory##########
+sudo mkdir /var/lume
+
+#############sudoers############
+sudo -s
+usermod -aG sudo username
+edit /etc/sudoers
+	add: maos ALL=(ALL) NOPASSWD:AL
+
+#########install lamp stack############
+https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04
+
+sudo apt-get update
+sudo apt-get install apache2
+
+sudo nano /etc/apache2/apache2.conf
+	add to bottom: ServerName lume
+
+sudo apt-get install mysql-server
+sudo mysql_secure_installation
+
+sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt php5-mysql
+
+sudo nano /etc/apache2/mods-enabled/dir.conf
+sudo apt-get install php-curl
+
+#########install arduino runtime############
+sudo apt-get install arduino
+
+########install pip################
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py
+
+#######install ino build tools########
+pip install ino
+
+#######install picocom for serial com to arduino##########
+sudo apt-get install picocom
+
+########add fastLED library ###################
+mkdir /var/lume/arduinoLibs
+cd /tmp
+wget https://github.com/FastLED/FastLED/archive/master.zip
+unzip master.zip
+cp -r FastLED-master /var/lume/arduinoLibs/FastLED
+cp -r FastLED-master /usr/share/arduino/libraries/FastLED
+
+########build lume inbox website##############
+
+sudo mkdir -p /var/www/html/lumebot.com/public_html
+sudo mkdir /var/www/html/lumebot.com/logs
+nano /etc/apache2/sites-available/lumebot.com.conf
+	add:
+	<VirtualHost *:80> 
+	     ServerAdmin maos@lume440.com
+	     ServerName lumebot.com
+	     ServerAlias www.lumebot.com
+	     DocumentRoot /var/www/html/lumebot.com/public_html/
+	     ErrorLog /var/www/html/lumebot.com/html/logs/error.log 
+	     CustomLog /var/www/html/lumebot.com/htmllogs/access.log combined
+	</VirtualHost>
+sudo a2ensite lumebot.com.conf
+sudo service apache2 reload
+sudo nano /var/www/html/lumebot.com/public_html/index.php
+add: Hello, I am lume
+
+#################interface:pygame#################
+sudo apt-get install python-pygame
+sudo easy_install -U distribute
+sudo pip install pygameui
+sudo find / -type f  -name '*.ttf'
+cd /usr/local/lib/python2.7/dist-packages/pygameui/resources/fonts
+sudo mv bold.ttf bold.old
+sudo mv regular.ttf regular.old
+sudo cp /usr/share/fonts/truetype/freefont/FreeSans.ttf regular.ttf
+sudo cp /usr/share/fonts/truetype/freefont/FreeSansBold.ttf bold.ttf
+
+
+######kivvy##########################
+###start with X11 and LXDE WM
+sudo apt-get update && sudo apt-get -y upgrade
+
+sudo apt-get install --no-install-recommends xinit
+sudo apt-get install --no-install-recommends xserver-xorg
+sudo apt-get install lxde-core lxappearance
+
+####start kivvy
+https://github.com/mrichardson23/rpi-kivy-screen	
+https://learn.adafruit.com/running-opengl-based-games-and-emulators-on-adafruit-pitft-displays/pitft-setup
+#followup -maos
+
+
+
+Cont-maos
