@@ -1,0 +1,4 @@
+<?php
+exec('sudo python /var/lume/lindenhurst/arduino/tunerPink_RC1/sketchRun_tunerPink_RC1.py');
+header('Location: http://localhost/lumebot.com/public_html/lindenhurst/inside/');
+?>
