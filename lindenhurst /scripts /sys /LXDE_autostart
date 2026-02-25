@@ -1,0 +1,4 @@
+@lxpanel --profile LXDE
+@pcmanfm --desktop --profile LXDE
+@xscreensaver -no-splash
+@chromium-browser --noerrdialogs --no-sandbox --user-data-dir --kiosk --incognito /var/www/html/lumebot.com/public_html/lindenhurst/index.html
